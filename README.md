@@ -1,83 +1,59 @@
-🧹 Data Cleaner Tool (Python + Pandas + Docker)
+# 🧹 Data Cleaner
 
-A simple and lightweight **Data Cleaning CLI Tool** built with **Python** and **Pandas**, designed to quickly remove missing values from CSV files.
-The tool can be run locally or inside a Docker container for consistent and portable execution.
-
-🚀 Features
-
-✅ Reads CSV files
-✅ Removes rows with missing (`NaN`) values
-✅ Saves the cleaned data into a new CSV file
-✅ Supports command-line arguments (`--input` and `--output`)
-✅ Dockerized for easy deployment and reproducibility
-
- 🧱 Project Structure
-
-data-cleaner/
-├── data_cleaner.py       # Main Python script
-├── requirements.txt      # Python dependencies
-├── Dockerfile            # Docker image definition
-└── README.md             # Project documentation
-
-🧠 How It Works
-The script:
-
-1. Reads the input CSV file using **Pandas**
-2. Drops any rows that contain missing values
-3. Saves the cleaned data to the specified output file
-
-Example Flow:
-
-```
-Input CSV → [Rows with NaN] → Data Cleaner → Output CSV (cleaned)
-```
-⚙️ Installation and Usage
-🐍 Run Locally (Without Docker)
-
-1. Install dependencies
-
-   ```bash
-   pip install -r requirements.txt
-   ```
-2. Run the script
-
-   ```bash
-   python data_cleaner.py --input data.csv --output cleaned.csv
-   ```
-3. Expected Output
-
-   ```
-   ✅ Cleaned data saved to cleaned.csv
-   🧾 Rows before: 1000, after: 920, removed: 80
-   ```
-🐳 Run Inside Docker
-
- 1. Build the Docker image
+**One-line CSV cleaner** – drops rows with missing values.
 
 ```bash
-docker build -t data-cleaner .
+python data_cleaner.py --input dirty.csv --output clean.csv
 ```
-2. Run the container
+
+Done.
+
+---
+
+## Install
 
 ```bash
-docker run -v $(pwd):/app data-cleaner --input data.csv --output cleaned.csv
+pip install pandas
 ```
- `-v $(pwd):/app` mounts your current directory to `/app` inside the container,
-  allowing access to your CSV files.
 
-3. Verify Output
-After running, you’ll find the cleaned file in your current folder:
+---
 
+## Run
+
+```bash
+python data_cleaner.py --input data.csv --output cleaned.csv
 ```
-cleaned.csv
+
+**Output**
 ```
-🧾 License
-This project is open-source and available under the MIT License.
+✅ Saved to cleaned.csv
+Rows: 1000 → 920 (80 removed)
+```
 
-👨‍💻 Author
-Name: Unaid Abdullah
-Created:2025
-Tech Stack: Python, Pandas, Docker
-GitHub: [@unaidabdullah-ui](https://github.com/unaidabdullah-ui)
+---
 
-> 🧹 “Clean data is happy data — automate your data cleaning and save time!”
+## Code (data_cleaner.py)
+
+```python
+import pandas as pd, argparse, sys
+
+parser = argparse.ArgumentParser()
+parser.add_argument("--input", required=True)
+parser.add_argument("--output", required=True)
+args = parser.parse_args()
+
+df = pd.read_csv(args.input)
+before = len(df)
+df = df.dropna()
+df.to_csv(args.output, index=False)
+
+print(f"✅ Saved to {args.output}")
+print(f"Rows: {before} → {len(df)} ({before-len(df)} removed)")
+```
+
+---
+
+## Author
+@unaidabdullah-ui · Nov 2025
+
+> Clean data, happy life.
